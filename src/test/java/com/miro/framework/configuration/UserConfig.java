@@ -1,0 +1,11 @@
+package com.miro.framework.configuration;
+
+import org.aeonbits.owner.Config;
+
+public interface UserConfig extends Config {
+
+    @DefaultValue("miro_%s")
+    @Key("email.template")
+    String emailTemplate();
+
+}
