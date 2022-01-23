@@ -1,5 +1,5 @@
 
-# <p align="center"> <img src="images/Wallarm.png" width="100" height="70">  Autotests for [Miro: The Visual Collaboration Platform for Every Team](https://miro.com/) website</p>
+# <p align="center"> <img src="images/Miro.png" width="90" height="70">  Autotests for [Miro: The Visual Collaboration Platform for Every Team](https://miro.com/) website</p>
 ___
 ##  <p align="center"> Technologies and tools used </p>
 | IntelliJ IDEA | Gradle | Java | Junit5 | Selenide | Selenoid | Jenkins | Allure Report |
