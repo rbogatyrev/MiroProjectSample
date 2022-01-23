@@ -4,7 +4,6 @@ import com.miro.framework.configuration.EnvironmentConfig;
 import org.aeonbits.owner.ConfigFactory;
 
 public enum Urls implements IEnumValue {
-
     MAIN_PAGE(""),
     SIGNUP_PAGE("signup"),
     EMAIL_CONFIRM("email-confirm"),
