@@ -1,5 +1,5 @@
 
-# <p align="center"> <img src="images/Wallarm.png" width="100" height="70">  Autotests for [Miro: The Visual Collaboration Platform for Every Team](https://miro.com/) website</p>
+# <p align="center"> <img src="images/Miro.png" width="90" height="70">  Autotests for [Miro: The Visual Collaboration Platform for Every Team](https://miro.com/) website</p>
 ___
 ##  <p align="center"> Technologies and tools used </p>
 | IntelliJ IDEA | Gradle | Java | Junit5 | Selenide | Selenoid | Jenkins | Allure Report |
@@ -20,7 +20,7 @@ ___
 
 ___
 
-## Running from [**Jenkins**](https://jenkins.autotests.cloud/job/MiroJob/build?delay=0sec)
+## Running from [**Jenkins**](https://jenkins.autotests.cloud/job/MiroProjectJob/)
 To start the build you need to specify the following parameters:
 ![RunParameters](images/JenkinsBuildStart.jpg)
 * **THREAD_NUMBER** - Specifies the number of concurrent running threads. Leave empty for running with a single thread
