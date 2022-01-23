@@ -10,6 +10,9 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$x;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+/**
+ * Super class that contains basic configuration for all page classes
+ */
 public abstract class BasePage {
 
     Logger logger = Logger.getInstance();

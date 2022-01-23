@@ -8,9 +8,16 @@ import java.util.stream.Stream;
 
 import static com.miro.framework.enums.SignupPageValidationErrors.*;
 
-
+/**
+ * Class for generating and passing data to tests
+ */
 public class TestDataProvider {
 
+    /**
+     * Generate a random user profile
+     *
+     * @return User DTO
+     */
     public static User generateRandomUserProfile() {
         User user = new User();
         user.setName(RandomValuesGenerator.generateRandomString(8));
@@ -20,6 +27,11 @@ public class TestDataProvider {
         return user;
     }
 
+    /**
+     * Generate set of data arguments for sign up page fields validation
+     *
+     * @return a set of data arguments for sign up page fields validation
+     */
     static Stream<Arguments> getUserValidationData() {
         User firstUser = generateRandomUserProfile();
         firstUser.setWorkEmail("st4my@yandex.ru");
@@ -36,7 +48,6 @@ public class TestDataProvider {
         User forthUser = generateRandomUserProfile();
         forthUser.setName("");
         SignupPageValidationErrors nameIsEmptyError = NAME_IS_EMPTY;
-
 
         return Stream.of(
                 Arguments.of(firstUser, emailAlreadyRegisteredError),

@@ -11,6 +11,9 @@ import org.junit.jupiter.api.TestInfo;
 
 import static java.lang.String.format;
 
+/**
+ * Super class that contains basic configuration for all test classes
+ */
 public abstract class BaseTest {
 
     protected Logger logger = Logger.getInstance();

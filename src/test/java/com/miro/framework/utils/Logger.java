@@ -1,5 +1,8 @@
 package com.miro.framework.utils;
 
+/**
+ * Utility class for logging
+ */
 public class Logger {
 
     private static final org.apache.log4j.Logger LOG4J = org.apache.log4j.LogManager.getLogger(Logger.class);

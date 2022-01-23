@@ -2,7 +2,9 @@ package com.miro.framework.configuration;
 
 import org.aeonbits.owner.Config;
 
-
+/**
+ * Configuration class that contains webdriver setup properties
+ */
 public interface WebDriverConfig extends Config {
 
     @DefaultValue("false")

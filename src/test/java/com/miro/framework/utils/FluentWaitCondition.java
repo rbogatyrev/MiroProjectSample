@@ -8,9 +8,13 @@ import com.codeborne.selenide.ex.ElementShouldNot;
 
 import java.time.Duration;
 
+/**
+ * Wrapper class of selenide conditions
+ */
 public class FluentWaitCondition {
 
-    /** Check that the element is visible within a specific explicit wait
+    /**
+     * Check that the element is visible within a specific explicit wait
      *
      * @param elem     SelenideElement
      * @param duration Duration of explicit wait in sec
@@ -21,13 +25,11 @@ public class FluentWaitCondition {
         try {
             elem.should(Condition.visible, Duration.ofSeconds(duration));
             flag = true;
-
         } catch (ElementNotFound | ElementShould e) {
             flag = false;
         }
         return flag;
     }
-
 
     /**
      * Check that the element is visible within 4 sec explicit wait
@@ -38,7 +40,6 @@ public class FluentWaitCondition {
     public static boolean shouldBeVisible(SelenideElement elem) {
         return shouldBeVisible(elem, 4);
     }
-
 
     /***
      * Check that the element is not visible within a specific explicit wait
@@ -57,7 +58,6 @@ public class FluentWaitCondition {
         }
         return flag;
     }
-
 
     /**
      * Check that the element is not visible within 4 sec explicit wait

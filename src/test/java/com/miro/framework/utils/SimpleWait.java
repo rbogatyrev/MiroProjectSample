@@ -1,5 +1,8 @@
 package com.miro.framework.utils;
 
+/**
+ * Wrapper class of Thread.sleep
+ */
 public class SimpleWait {
 
     private SimpleWait() {
@@ -28,6 +31,5 @@ public class SimpleWait {
         }
 
     }
-
 }
 

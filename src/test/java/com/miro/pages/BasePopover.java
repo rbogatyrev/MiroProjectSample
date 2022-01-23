@@ -3,7 +3,7 @@ package com.miro.pages;
 import com.codeborne.selenide.SelenideElement;
 
 /**
- * Popup window base class
+ * Super class that contains basic methods for all popup windows
  */
 public abstract class BasePopover {
 

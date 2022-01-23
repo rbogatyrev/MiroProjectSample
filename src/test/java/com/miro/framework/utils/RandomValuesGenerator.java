@@ -62,11 +62,11 @@ public class RandomValuesGenerator {
     }
 
     /**
-     * Generating
+     * Generate a password that contains 6 random symbols, 2 numerics and 1 special character
      *
-     * @return
+     * @return password String
      */
-    public static String generateGoodPassword(){
+    public static String generateGoodPassword() {
         String textPart = StringUtils.capitalize(generateRandomString(6) + generateSpecialCharactersString(1));
         String digitPart = generateRandomNumber(2);
         return textPart + digitPart;
@@ -75,7 +75,7 @@ public class RandomValuesGenerator {
     /**
      * Generate random email from a specific template
      *
-     * @return email
+     * @return email string
      */
     public static String generateWorkEmail() {
         setCounter();
