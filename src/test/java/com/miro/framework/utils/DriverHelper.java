@@ -38,6 +38,7 @@ public class DriverHelper {
             caps.setCapability("enableVNC", true);
             caps.setCapability("enableVideo", true);
             caps.setCapability("browserName", "chrome");
+            caps.setCapability("env", new String[]{"LANG=ru_RU.UTF-8", "LANGUAGE=ru:en", "LC_ALL=ru_RU.UTF-8"});
             caps.setCapability("version", driverConfig.chromeVersion());
             Configuration.remote = driverConfig.remoteUrl();
             Configuration.browserCapabilities = caps;
