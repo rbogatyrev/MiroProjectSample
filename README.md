@@ -20,7 +20,7 @@ ___
 
 ___
 
-## Running from [**Jenkins**](https://jenkins.autotests.cloud/job/MiroJob/build?delay=0sec)
+## Running from [**Jenkins**](https://jenkins.autotests.cloud/job/MiroProjectJob/)
 To start the build you need to specify the following parameters:
 ![RunParameters](images/JenkinsBuildStart.jpg)
 * **THREAD_NUMBER** - Specifies the number of concurrent running threads. Leave empty for running with a single thread
