@@ -52,7 +52,7 @@ public class SignUpTest extends BaseTest {
 
     @ParameterizedTest(name = "{1} validation error display when sign up")
     @MethodSource("com.miro.framework.utils.TestDataProvider#getUserValidationData")
-    void shouldDisplayValidationError_WhenSignUpWithInvalidFieldValues(User user, SignupPageValidationErrors signupPageValidationError) {
+    void shouldDisplayValidationError_WhenSignUpWithIncorrectFieldValues(User user, SignupPageValidationErrors signupPageValidationError) {
         signUpSteps.signUpNewMiroUser(user);
 
         Assert.assertTrue(format("'%s' error is not displayed", signupPageValidationError.getValue()),
