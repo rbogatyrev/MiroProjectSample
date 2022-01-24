@@ -24,7 +24,7 @@ To start the build you can specify the following system.properties:
 * **-Dthreads** - Specifies the number of concurrent running threads. **The build will be executed in a single thread by default.**
 ## Example of command line arguments
 on Selenoid environment:
-* **./gradlew clean test --tests SignUpTest -Ddriver.remote=true -Dremote.chrome.version="91.0" -Dthreads="2" -Dremote.url="http://localhost:4444/wd/hub"** 
+* **./gradlew clean test --tests SignUpTest -Ddriver.remote=true -Dremote.chrome.version="91.0" -Dthreads="2" -Dremote.url="http://myhostexample:4444/wd/hub"** 
 
 on Local environment:
 * **./gradlew clean test --tests SignUpTest -Dthreads="2"** </p>
