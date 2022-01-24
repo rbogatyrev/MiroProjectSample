@@ -28,6 +28,7 @@ dependencies {
             "io.rest-assured:rest-assured:4.4.0",
             "io.qameta.allure:allure-selenide:$allureVersion",
             "com.github.javafaker:javafaker:1.0.2",
+            "com.github.stephenc.monte:monte-screen-recorder:0.7.7.0",
             "com.codeborne:pdf-test:1.6.1",
             "org.junit.jupiter:junit-jupiter-api:5.7.1",
             "org.slf4j:slf4j-simple:1.7.30",

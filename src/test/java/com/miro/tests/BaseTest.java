@@ -36,7 +36,6 @@ public abstract class BaseTest {
 
     @AfterEach()
     public void tearDown(TestInfo testInfo) {
-        Selenide.closeWebDriver();
         logger.info(format("Test %s is finished", testInfo.getDisplayName()));
     }
 
