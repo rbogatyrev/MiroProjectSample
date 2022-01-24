@@ -4,15 +4,9 @@ import com.codeborne.selenide.Configuration;
 import com.miro.framework.configuration.WebDriverConfig;
 import org.aeonbits.owner.ConfigFactory;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
-
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import static com.codeborne.selenide.Selenide.executeJavaScript;
 import static com.codeborne.selenide.Selenide.switchTo;
-import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
-import static java.lang.String.format;
 
 public class DriverHelper {
 
@@ -43,33 +37,6 @@ public class DriverHelper {
             Configuration.remote = driverConfig.remoteUrl();
             Configuration.browserCapabilities = caps;
         }
-
-    }
-
-    /**
-     * Get the url of the attached video-file
-     *
-     * @param sessionId Current browser's session
-     * @return Url of the attached video-file
-     */
-    public static URL getVideoUrl(String sessionId) {
-        String videoUrl = driverConfig.videoUrlPart() + sessionId + ".mp4";
-        try {
-            return new URL(videoUrl);
-        } catch (MalformedURLException e) {
-            Logger.getInstance().warn(format("[ALLURE VIDEO ATTACHMENT ERROR] Wrong test video url, {}", videoUrl));
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     * Get current browser's session
-     *
-     * @return current browser's session
-     */
-    public static String getSessionId() {
-        return ((RemoteWebDriver) getWebDriver()).getSessionId().toString();
     }
 
 }
