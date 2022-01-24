@@ -30,7 +30,7 @@ on Local environment:
 * **./gradlew clean test --tests SignUpTest -Dthreads="2"** </p>
 
 ## <p align="center"> Allure report</p>
-Artifacts for allure report with test will be generated automatically after build completion. In order to generate allure report manually pass the following command in terminal:
+Artifacts for allure report with test results will be generated automatically after build completion. In order to generate allure report manually pass the following command in terminal:
 * **./gradlew allureServe**
 
 For more detailed information on a test, click on its name in the list. In the opened tab you can find a list of the test's execution steps. If the test marked as failed, a screenshot of its failure and browser console logs will be attached.
