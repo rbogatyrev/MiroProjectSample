@@ -2,8 +2,8 @@
 # <p align="center"> <img src="images/Miro.png" width="90" height="70">  Autotests for [Miro: The Visual Collaboration Platform for Every Team](https://miro.com/) website</p>
 ___
 ##  <p align="center"> Technologies and tools used </p>
-| IntelliJ IDEA | Gradle | Java | Junit5 | Selenide | Selenoid | Jenkins | Allure Report |
-|:------:|:----:|:----:|:------:|:------:|:--------:|:--------:|:-------------:|
+| IntelliJ IDEA | Gradle | Java | Junit5 | Selenide | Selenoid | Allure Report |
+|:------:|:----:|:----:|:------:|:------:|:--------:|:-------------:|
 | <img src="images/Intellij.svg" width="40" height="40"> | <img src="images/Gradle.svg" width="40" height="40"> | <img src="images/Java.svg" width="40" height="40"> | <img src="images/Junit5.svg" width="40" height="40"> | <img src="images/Selenide.svg" width="40" height="40"> | <img src="images/Selenoid.svg" width="40" height="40"> | <img src="images/Jenkins.svg" width="40" height="40"> | <img src="images/Allure Report.svg" width="40" height="40"> |
 
 ___
@@ -14,23 +14,25 @@ ___
 * Parameterized - a test is being executed multiple times using different set of entries 
 
 ___
+## Test Build parameters
+To start the build you can specify the following system.properties:
 
-## Example of test execution in [**Selenoid environment**](https://selenoid.autotests.cloud/#/)
-![Selenoid](images/SelenoidVideo.gif)
+* **-Ddriver.remote** - **true** The build will be executed via remote chrome driver. **false (default value)** The build will be executed via local chrome driver.
+* **-Dremote.url** - Host address for Selenoid environment. **Required if remote driver is chosen.**
+* **-Dremote.browser** - Chrome version for Selenoid environment. **Required if remote driver is chosen.**
+* **-Dremote.browser.version** - Chrome version for Selenoid environment. **Required if remote driver is chosen.**
+* **-Dthreads** - Specifies the number of concurrent running threads. **The build will be executed in a single thread by default.**
 
-___
+## <p align="center"> Example of command line arguments</p>
+* on Selenoid environment: <br> **./gradlew clean test --tests SignUpTest -Ddriver.remote=true -Dremote.chrome.version="91.0" -Dthreads="2" -Dremote.url="http://localhost:4444/wd/hub"** 
+* on Local environment: <br> **./gradlew clean test --tests SignUpTest -Dthreads="2"** </p>
 
-## Running from [**Jenkins**](https://jenkins.autotests.cloud/job/MiroProjectJob/)
-To start the build you need to specify the following parameters:
-![RunParameters](images/JenkinsBuildStart.jpg)
-* **THREAD_NUMBER** - Specifies the number of concurrent running threads. Leave empty for running with a single thread
-* **CHROME_VERSION** - Chrome version for Selenoid environment
-* **REMOTE_DRIVER_URL** - Host address for Selenoid
-
+## <p align="center"> Allure report</p>
 Allure report with test execution results will be generated automatically after build completion  
-![BuildFinished](images/JenkinsBuildFinishedEN.jpg)
+In order to generate allure report manually pass the following command in terminal:
+**./gradlew allureServe**
 
-For more detailed information on a test, click on its name in the list. In the opened tab you can find a list of the test's execution steps and the video attachment of its whole run at the bottom. If the test marked as failed, a screenshot of its failure and browser console logs will also be attached.
+For more detailed information on a test, click on its name in the list. In the opened tab you can find a list of the test's execution steps. If the test marked as failed, a screenshot of its failure and browser console logs will be attached.
 
-![TestSuccess](images/AllureResult.png)
-![TestFailed](images/AllureFailResult.png)
+![TestSuccess](images/AllureSuccess.jpg)
+![TestFailed](images/AllureFailed.jpg)
