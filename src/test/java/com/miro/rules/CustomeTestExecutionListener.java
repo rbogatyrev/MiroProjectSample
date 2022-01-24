@@ -79,5 +79,6 @@ public class CustomeTestExecutionListener implements TestExecutionListener {
             makeScreenshot(testIdentifier);
             saveConsoleLog(testIdentifier);
         }
+        Selenide.closeWebDriver();
     }
 }
