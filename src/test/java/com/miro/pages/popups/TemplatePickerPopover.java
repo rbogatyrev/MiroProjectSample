@@ -22,7 +22,7 @@ public class TemplatePickerPopover extends BasePopover {
 
     @Override
     protected SelenideElement currentPopup() {
-        return $(POPOVER_ELEMENT).shouldBe(visible, ofSeconds(5));
+        return $(POPOVER_ELEMENT).shouldBe(visible, ofSeconds(10));
     }
 
     public WorkSpacePage closePopup() {

@@ -51,7 +51,7 @@ public class InboxAccountCreateDialog extends BasePopover {
             currentPopup().$x(format(CREATE_BUTTON, CREATE.getValue())).click();
             tries++;
         }
-        while (!(FluentWaitCondition.shouldNotBeVisible($(POPOVER_ELEMENT), 3)) && tries < 3);
+        while (!(FluentWaitCondition.shouldNotBeVisible($(POPOVER_ELEMENT), 4)) && tries < 3);
 
         return inboxPage;
     }
