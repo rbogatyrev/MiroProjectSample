@@ -22,15 +22,16 @@ To start the build you can specify the following system.properties:
 * **-Dremote.browser** - Chrome version for Selenoid environment. **Required if remote driver is chosen.**
 * **-Dremote.browser.version** - Chrome version for Selenoid environment. **Required if remote driver is chosen.**
 * **-Dthreads** - Specifies the number of concurrent running threads. **The build will be executed in a single thread by default.**
+## Example of command line arguments
+on Selenoid environment:
+* **./gradlew clean test --tests SignUpTest -Ddriver.remote=true -Dremote.chrome.version="91.0" -Dthreads="2" -Dremote.url="http://localhost:4444/wd/hub"** 
 
-## <p align="center"> Example of command line arguments</p>
-* on Selenoid environment: <br> **./gradlew clean test --tests SignUpTest -Ddriver.remote=true -Dremote.chrome.version="91.0" -Dthreads="2" -Dremote.url="http://localhost:4444/wd/hub"** 
-* on Local environment: <br> **./gradlew clean test --tests SignUpTest -Dthreads="2"** </p>
+on Local environment:
+* **./gradlew clean test --tests SignUpTest -Dthreads="2"** </p>
 
 ## <p align="center"> Allure report</p>
-Allure report with test execution results will be generated automatically after build completion  
-In order to generate allure report manually pass the following command in terminal:
-**./gradlew allureServe**
+Artifacts for allure report with test will be generated automatically after build completion. In order to generate allure report manually pass the following command in terminal:
+* **./gradlew allureServe**
 
 For more detailed information on a test, click on its name in the list. In the opened tab you can find a list of the test's execution steps. If the test marked as failed, a screenshot of its failure and browser console logs will be attached.
 
