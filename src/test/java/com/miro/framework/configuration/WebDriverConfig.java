@@ -11,15 +11,10 @@ public interface WebDriverConfig extends Config {
     @Key("driver.remote")
     boolean isRemote();
 
-    @DefaultValue("https://user1:1234@selenoid.autotests.cloud/wd/hub")
+    @DefaultValue("http://localhost:4444/wd/hub")
     @Key("remote.url")
     String remoteUrl();
-
-    @DefaultValue("https://selenoid.autotests.cloud/video/")
-    @Key("video.urlpart")
-    String videoUrlPart();
-
-
+    
     @DefaultValue("91.0")
     @Key("remote.chrome.version")
     String chromeVersion();

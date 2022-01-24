@@ -4,14 +4,10 @@ import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.WebDriverRunner;
 import com.miro.framework.configuration.WebDriverConfig;
 import com.miro.framework.utils.DateFormat;
-import com.miro.framework.utils.DriverHelper;
 import com.miro.framework.utils.Logger;
 import io.qameta.allure.Attachment;
-import io.restassured.RestAssured;
-import io.restassured.response.Response;
 import org.aeonbits.owner.ConfigFactory;
 import org.apache.commons.io.FileUtils;
-import org.apache.hc.core5.http.HttpStatus;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
@@ -20,11 +16,8 @@ import org.openqa.selenium.TakesScreenshot;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Calendar;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import static com.google.common.io.Files.toByteArray;
 import static java.lang.String.format;
@@ -80,52 +73,11 @@ public class CustomeTestExecutionListener implements TestExecutionListener {
         return null;
     }
 
-
-    private static byte[] fetchWithRetry(String sessionId) throws TimeoutException {
-        URL videoUrl = DriverHelper.getVideoUrl(sessionId);
-        Logger.getInstance().info("Downloading: " + videoUrl);
-        for (int i = 0; i < 10; i++) {
-            Response response = RestAssured.get(videoUrl);
-            if (response.getStatusCode() == HttpStatus.SC_OK) {
-                return response.asByteArray();
-            }
-
-            try {
-                TimeUnit.SECONDS.sleep(2);
-            } catch (InterruptedException e) {
-                throw new IllegalStateException(e);
-            }
-        }
-        throw new TimeoutException();
-    }
-
-    /**
-     * Attach an mp4-file of a test execution to allure-report
-     *
-     * @param sessionId current browser's session
-     * @return mp4 file as byteArray
-     */
-    @Attachment(value = "Video", type = "video/mp4")
-    public static byte[] getVideo(String sessionId) {
-        try {
-            return fetchWithRetry(sessionId);
-        } catch (TimeoutException e) {
-            Logger.getInstance().error("Failed fetching URL");
-            return null;
-        }
-    }
-
     @Override
     public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
-        String sessionId = DriverHelper.getSessionId();
         if (testExecutionResult.getThrowable().isPresent()) {
             makeScreenshot(testIdentifier);
             saveConsoleLog(testIdentifier);
-        }
-
-        Selenide.closeWebDriver();
-        if (driverConfig.isRemote()) {
-            getVideo(sessionId);
         }
     }
 }
