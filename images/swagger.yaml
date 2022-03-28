@@ -1,0 +1,1527 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Event Bus API
+  description: |
+    Businessolver EventBus API.
+
+
+
+    ## General
+    ### Working with Postman
+    ℹ️ You can import this spec as your [Postman](https://www.postman.com/) API.
+    1. Import from YAML file
+    2. Create a new Collection from Postman API
+    3. Create a postman environment, with `baseUrl` and `bearerToken`:
+
+
+    | variable | Description | Example |
+    |  ------------  | -----------                                | -----------                                         |
+    | `baseUrl`      | Full URL to the EB including version       | https://eventbus-api.bscebdev01.benefitsolver.io/v1 |
+    | `bearerToken`  | Client's secret                            | sE1cr231ETv1312alU1e                                |
+
+    ### Request / Response
+    For generic add/edit/delete operations:
+    ```http
+    POST /v1/destination/add/{client-id}/... HTTP/1.1
+    Content-Type: application/json
+    Authorization: Bearer {bearerToken}
+
+    {"data_property_name": "value"}
+
+    // Success response
+    {
+        "Status": "SUCCESS",
+        "Details": "detailed description of what happened if needed"
+    }
+
+    // Failure response
+    {
+        "Status": "FAILED",
+        "Details": "error details"
+    }
+    ```
+
+    Get operations:
+    ```http
+    GET /v1/destination/get/{client-id}/... HTTP/1.1
+    Content-Type: application/json
+    Authorization: Bearer {bearerToken}
+
+    // single result
+    {
+        "field-1": "value"
+        "field-2": "value2"
+    }
+
+    ```
+    ```http
+    GET /v1/destination/list/{client-id}/... HTTP/1.1
+    Content-Type: application/json
+    Authorization: Bearer {bearerToken}
+
+    // multiple results
+    {
+        "item-1": {
+          "field-1": "value"
+          "field-2": "value2"
+        }
+    }
+    ```
+
+    ### Error Codes
+    | Code          | Description           |
+    | ------------- |-----------------------|
+    | 403           | Forbidden. Invalid user credentials |
+    | 400           | Bad Request. Invalid input or no data found |
+    | 500           | Internal Server Error |
+
+
+  contact: { }
+paths:
+  '/client/add/{client_id}':
+    post:
+      summary: Add a Client
+      operationId: client-add
+      description: Add a new client in to the Dynamo DB
+      tags:
+        - Clients API
+      responses:
+        '200':
+          $ref: '#/components/responses/GenericSuccess'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    parameters:
+      - $ref: '#/components/parameters/client_id'
+
+  '/client/list':
+    get:
+      summary: List the Clients
+      operationId: client-list
+      description: List all clients.
+      tags:
+        - Clients API
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                description: list of clients
+                items:
+                  description: "List of clients"
+                  example:  ["test-client-one", "test-client-two"]
+
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  '/client/update/{client_id}':
+    put:
+      summary: Update a Client
+      operationId: client-update
+      description: Update a Client
+      tags:
+        - Clients API
+      responses:
+        '200':
+          $ref: '#/components/responses/GenericSuccess'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    parameters:
+      - $ref: '#/components/parameters/client_id'
+
+  '/client/del/{client_id}':
+    delete:
+      summary: Delete a Client
+      operationId: client-delete
+      description: Delete a Client
+      tags:
+        - Clients API
+      responses:
+        '200':
+          $ref: '#/components/responses/GenericSuccess'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    parameters:
+      - $ref: '#/components/parameters/client_id'
+
+  '/client/get/{client_id}':
+    get:
+      summary: Get a Client
+      operationId: client-get
+      description: Get the Client imformation
+      tags:
+        - Clients API
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ClientId:
+                    type: string
+                    description: Id of a client `client_id`
+                    example: demo-client-id
+                  LastReplicationUpdateDate:
+                    type: string
+                    description: Last replication update date
+                    example: "2021-08-17 13:02:07.621001"
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    parameters:
+      - $ref: '#/components/parameters/client_id'
+
+  '/destination/add/{client_id}/{destination_id}':
+    post:
+      summary: Add a Destination
+      operationId: destination-add
+      description: Add a new destination
+      tags:
+        - Destination API
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/destination'
+      responses:
+        '200':
+          $ref: '#/components/responses/GenericSuccess'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    parameters:
+      - $ref: '#/components/parameters/client_id'
+      - $ref: '#/components/parameters/destination_id'
+
+  '/destination/list/{client_id}':
+    get:
+      summary: List Destinations
+      operationId: destination-list
+      description: 'The list of destinations, associated with `client_id`'
+      tags:
+        - Destination API
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  demo-destination-id-one:
+                    type: object
+                    properties:
+                      client_id:
+                        type: string
+                        description: Id of a client `client_id`
+                        example: demo-client-id
+                      webhook_uri:
+                        type: string
+                        example: 'https://webhook.site/93be5bbd-950a-4ff1-90b3-46e2febe7a60'
+                        minLength: 1
+                      authentication:
+                        type: object
+                        properties:
+                          auth_parameters:
+                            type: object
+                            properties:
+                              region:
+                                type: string
+                                description: AWS region
+                                example: us-east-1
+                              auth_header:
+                                type: string
+                                description: Authorization heared can be changed. AWS APIGateway don't pass header with name `Authorization` to lambda.
+                                example: Authorization
+                              token_endpoint:
+                                type: string
+                                description: URL for token endpoint
+                                example: 'https://businessolver.com/rest/token'
+                              access_key:
+                                type: string
+                                description: Access key name
+                                example: X-APIKEY-NAME
+                          auth_type:
+                            type: string
+                            description: Authentication type
+                            example: BSC_SIGV4
+                  demo-destination-id-two:
+                    type: object
+                    properties:
+                      client_id:
+                        type: string
+                        description: Id of a client `client_id`
+                        example: demo-client-id
+                      webhook_uri:
+                        type: string
+                        example: 'https://webhook.site/93be5bbd-950a-4ff1-90b3-46e2febe7a60'
+                        minLength: 1
+                      authentication:
+                        type: object
+                        properties:
+                          auth_parameters:
+                            type: object
+                            properties:
+                              region:
+                                type: string
+                                description: AWS region
+                                example: us-east-1
+                              auth_header:
+                                type: string
+                                description: Authorization heared can be changed. AWS APIGateway don't pass header with name `Authorization` to lambda.
+                                example: Authorization
+                              token_endpoint:
+                                type: string
+                                description: URL for token endpoint
+                                example: 'https://businessolver.com/rest/token'
+                              access_key:
+                                type: string
+                                description: Access key name
+                                example: X-APIKEY-NAME
+                          auth_type:
+                            type: string
+                            description: Authentication type
+                            example: BSC_SIGV4
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    parameters:
+      - $ref: '#/components/parameters/client_id'
+
+  '/destination/get/{client_id}/{destination_id}':
+    get:
+      summary: Get Destination
+      operationId: destination-get
+      description: 'The destination information, associated with `client_id` and the `destination_id`'
+      tags:
+        - Destination API
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  demo-destination-id-one:
+                    type: object
+                    properties:
+                      client_id:
+                        type: string
+                        description: Id of a client `client_id`
+                        example: demo-client-id
+                      webhook_uri:
+                        type: string
+                        example: 'https://webhook.site/93be5bbd-950a-4ff1-90b3-46e2febe7a60'
+                        minLength: 1
+                      authentication:
+                        type: object
+                        properties:
+                          auth_parameters:
+                            type: object
+                            properties:
+                              region:
+                                type: string
+                                description: AWS region
+                                example: us-east-1
+                              auth_header:
+                                type: string
+                                description: Authorization heared can be changed. AWS APIGateway don't pass header with name `Authorization` to lambda.
+                                example: Authorization
+                              token_endpoint:
+                                type: string
+                                description: URL for token endpoint
+                                example: 'https://businessolver.com/rest/token'
+                              access_key:
+                                type: string
+                                description: Access key name
+                                example: X-APIKEY-NAME
+                          auth_type:
+                            type: string
+                            description: Authentication type
+                            example: BSC_SIGV4
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    parameters:
+      - $ref: '#/components/parameters/client_id'
+      - $ref: '#/components/parameters/destination_id'
+
+  '/destination/update/{client_id}/{destination_id}':
+    put:
+      summary: Update a Destination
+      operationId: destination-update
+      description: Updating existing destination
+      tags:
+        - Destination API
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/destination'
+      responses:
+        '200':
+          $ref: '#/components/responses/GenericSuccess'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    parameters:
+      - $ref: '#/components/parameters/client_id'
+      - $ref: '#/components/parameters/destination_id'
+
+  '/destination/del/{client_id}/{destination_id}':
+    delete:
+      summary: Delete a Destination
+      operationId: destination-del
+      description: |
+        ⚠️ If destination has any subscriptions, associated with it, they need to be deleted first.
+      tags:
+        - Destination API
+      responses:
+        '200':
+          $ref: '#/components/responses/GenericSuccess'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    parameters:
+      - $ref: '#/components/parameters/client_id'
+      - $ref: '#/components/parameters/destination_id'
+
+  '/dlq/flush/{client_id}/{subscription_id}':
+    post:
+      summary: Flush a Queue
+      operationId: dlq-flush
+      description: FLushing all records from subscription's DLQ
+      tags:
+        - Maintenance
+      responses:
+        '200':
+          $ref: '#/components/responses/GenericSuccess'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    parameters:
+      - $ref: '#/components/parameters/client_id'
+      - $ref: '#/components/parameters/subscription_id'
+
+  '/dlq/retry/{client_id}/{subscription_id}':
+    post:
+      summary: Retry a Queue
+      operationId: dlq-retry
+      description: Retry all items in subscription's DLQ
+      tags:
+        - Maintenance
+      responses:
+        '200':
+          $ref: '#/components/responses/GenericSuccess'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    parameters:
+      - $ref: '#/components/parameters/client_id'
+      - $ref: '#/components/parameters/subscription_id'
+
+  /message/publish/{client_id}/{type_id}:
+    post:
+      summary: Send a Message
+      operationId: message-publish
+      description: Sending a message to the bus
+      tags:
+        - Publishing
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  Status:
+                    type: string
+                    example: SUCCESS
+                    minLength: 1
+                  Details:
+                    type: object
+                    properties:
+                      FailedEntryCount:
+                        type: number
+                        description: larger than 0 in case of error
+                      Entries:
+                        type: array
+                        description: list of IDs of entries on the bus
+                        items:
+                          type: object
+                          properties:
+                            EventId:
+                              type: string
+                              example: 138bba0e-28dc-369b-39bd-d262b5769d44
+                      ResponseMetadata:
+                        type: object
+                        description: additional debug info
+                        properties:
+                          RequestId:
+                            type: string
+                            example: "662eb91b-7ea1-4b19-801b-92e56035060c"
+                          HTTPStatusCode:
+                            type: number
+                            example: 200
+                          HTTPHeaders:
+                            type: object
+                          RetryAttempts:
+                            type: number
+                            example: 0
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+      requestBody:
+        description: Arbitrary payload. Must be valid according to schema definition. Schema **must be created** before message can go through.
+        content:
+          application/json:
+            schema:
+              type: object
+            examples:
+              example:
+                value:
+                  example-key1: enim adipisicing ad
+                  example-key2: 0
+                  example-obj:
+                    obj-key: obj-value
+    parameters:
+      - $ref: '#/components/parameters/client_id'
+      - $ref: '#/components/parameters/message_type'
+
+  '/subscription/add/{client_id}/{subscription_id}':
+    post:
+      summary: Add a Subscription
+      operationId: subscription-add
+      description: |
+        Subscription adds
+      tags:
+        - Subscriptions
+      parameters:
+        - $ref: '#/components/parameters/client_id'
+        - $ref: '#/components/parameters/subscription_id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/subscription'
+      responses:
+        '200':
+          $ref: '#/components/responses/ChattySuccess'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  '/subscription/list/{client_id}':
+    get:
+      summary: List Subscriptions
+      operationId: subscription-list
+      description: List of available subscriptions for client
+      tags:
+        - Subscriptions
+      parameters:
+        - $ref: '#/components/parameters/client_id'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Destinations:
+                    type: object
+                    description: List of client's destinations. In format of dict, key represents subscription ID
+                    properties:
+                      demo-subscription-id:
+                        type: object
+                        properties:
+                          Rule:
+                            type: object
+                            description: subscription's rule and pattern
+                            properties:
+                              Name:
+                                type: string
+                                example: "demo-subscription"
+                              EventPattern:
+                                type: string
+                                example: "{\"source\": [\"demo-client\"], \"detail-type\": [\"demo-type-id\"]}"
+                              State:
+                                type: string
+                                example: "ENABLED"
+                          Targets:
+                            type: array
+                            description: targets (destinations) for this subscription
+                            items:
+                              type: object
+                              properties:
+                                Id:
+                                  type: string
+                                  example: "demo-subscription"
+                                DestinationId:
+                                  type: string
+                                  example: "demo-destination"
+                                RetryPolicy:
+                                  type: object
+                                  properties:
+                                    MaximumRetryAttempts:
+                                      type: number
+                                      example: 5
+                                    MaximumEventAgeInSeconds:
+                                      type: number
+                                      example: 300
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  '/subscription/get/{client_id}/{subscription_id}':
+    get:
+      summary: Get Subscriptions
+      operationId: subscription-get
+      description: Get of available subscription for the client
+      tags:
+        - Subscriptions
+      parameters:
+        - $ref: '#/components/parameters/client_id'
+        - $ref: '#/components/parameters/subscription_id'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Destinations:
+                    type: object
+                    description: Get of client's destinations. In format of dict, key represents subscription ID
+                    properties:
+                      demo-subscription-id:
+                        type: object
+                        properties:
+                          Rule:
+                            type: object
+                            description: subscription's rule and pattern
+                            properties:
+                              Name:
+                                type: string
+                                example: "demo-subscription"
+                              EventPattern:
+                                type: string
+                                example: "{\"source\": [\"demo-client\"], \"detail-type\": [\"demo-type-id\"]}"
+                              State:
+                                type: string
+                                example: "ENABLED"
+                          Targets:
+                            type: array
+                            description: targets (destinations) for this subscription
+                            items:
+                              type: object
+                              properties:
+                                Id:
+                                  type: string
+                                  example: "demo-subscription"
+                                DestinationId:
+                                  type: string
+                                  example: "demo-destination"
+                                RetryPolicy:
+                                  type: object
+                                  properties:
+                                    MaximumRetryAttempts:
+                                      type: number
+                                      example: 5
+                                    MaximumEventAgeInSeconds:
+                                      type: number
+                                      example: 300
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  '/subscription/update/{client_id}/{subscription_id}':
+    put:
+      summary: Update a Subscription
+      operationId: subscription-update
+      description: Updating an existing subscription
+      tags:
+        - Subscriptions
+      parameters:
+        - $ref: '#/components/parameters/client_id'
+        - $ref: '#/components/parameters/subscription_id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/subscription'
+      responses:
+        '200':
+          $ref: '#/components/responses/ChattySuccess'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    parameters:
+      - $ref: '#/components/parameters/client_id'
+      - $ref: '#/components/parameters/subscription_id'
+
+  '/subscription/del/{client_id}/{subscription_id}':
+    delete:
+      summary: Delete a Subscription
+      operationId: subscription-del
+      description: |
+        ⚠️ Also deletes data in DLQs and archives
+      tags:
+        - Subscriptions
+      parameters:
+        - $ref: '#/components/parameters/client_id'
+        - $ref: '#/components/parameters/subscription_id'
+      responses:
+        '200':
+          $ref: '#/components/responses/ChattySuccess'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    parameters:
+      - $ref: '#/components/parameters/client_id'
+      - $ref: '#/components/parameters/subscription_id'
+
+  '/archive/replay/start/{client_id}/{replay_name}':
+    post:
+      summary: Start a replay
+      operationId: start-replay
+      description: Start a replay
+      tags:
+        - Maintenance
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                start_time:
+                  type: string
+                  description: "Date of starting replay"
+                  example: 2021-05-20 15:00:00 +0000
+                end_time:
+                  type: string
+                  description: "Date of finishing replay"
+                  example: 2021-05-21 16:00:00 +0000
+                subscriptions:
+                  type: array
+                  items:
+                    description: "List of subscriptions"
+                    example: [ "demo-subscription-id" ]
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Status:
+                    type: string
+                    example: SUCCESS
+                    minLength: 1
+                  Details:
+                    type: object
+                    properties: { }
+                required:
+                  - Status
+                  - Details
+              examples:
+                example:
+                  value:
+                    Status: "SUCCESS"
+                    Details:
+                      ReplayName: "demo-replay-2021-05-26-08-48-53"
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    parameters:
+      - $ref: '#/components/parameters/client_id'
+      - $ref: '#/components/parameters/replay_name'
+
+  '/archive/replay/list/{client_id}':
+    get:
+      summary: List Replays
+      operationId: replays-list
+      description: Show all client's replays
+      tags:
+        - Maintenance
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  example: [ "demo-replay-2021-07-13-23-58-14", "demo-replay-2021-07-13-23-34-11" ]
+                  description: list of replay names for given client
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    parameters:
+      - $ref: '#/components/parameters/client_id'
+
+  '/archive/replay/describe/{client_id}/{replay_name}':
+    get:
+      summary: Describe a Replay
+      operationId: describe-replay
+      description: Returns information about specified replay
+      tags:
+        - Maintenance
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  ReplayName:
+                    type: string
+                  Description:
+                    type: string
+                  State:
+                    type: string
+                    description: replay status
+                    enum: [ "RUNNING", "FAILED", "COMPLETED" ]
+                  EventStartTime:
+                    type: string
+                  EventEndTime:
+                    type: string
+                  ReplayStartTime:
+                    type: string
+                  ReplayEndTime:
+                    type: string
+                required:
+                  - ReplayName
+                  - Description
+                  - State
+                  - EventStartTime
+                  - ReplayStartTime
+                  - EventEndTime
+                  - StateReason
+              examples:
+                example-with-completed-status:
+                  value:
+                    ReplayName: "demo-2021-05-21-12-10-30"
+                    Description: "Replay messages initiated by test"
+                    State: "COMPLETED"
+                    EventStartTime: 2021-05-20T15:00:00+00:00
+                    EventEndTime: 2021-05-21T16:00:00+00:00
+                    ReplayStartTime: 2021-05-21T12:10:31+00:00
+                    ReplayEndTime: 2021-05-21T12:15:32+00:00
+                example-with-failed-replay:
+                  value:
+                    ReplayName: "demo-2021-05-21-12-10-30"
+                    Description: "Replay messages initiated by test"
+                    State: "FAILED"
+                    EventStartTime: 2021-05-20T15:00:00+00:00
+                    EventEndTime: 2021-05-21T16:00:00+00:00
+                    ReplayStartTime: 2021-05-21T12:10:31+00:00
+                    ReplayEndTime: 2021-05-21T12:15:32+00:00
+                    StateReason: <error_msg>
+                example-with-running-replay:
+                  value:
+                    ReplayName: "demo-2021-05-21-12-10-30"
+                    Description: "Replay messages initiated by test"
+                    State: "RUNNING"
+                    EventStartTime: 2021-05-20T15:00:00+00:00
+                    ReplayStartTime: 2021-05-21T12:10:31+00:00
+                    ReplayEndTime: 2021-05-21T12:15:32+00:00
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    parameters:
+      - $ref: '#/components/parameters/client_id'
+      - $ref: '#/components/parameters/replay_name'
+
+
+  '/schema/add/{client_id}/{type_id}':
+    post:
+      summary: Add a Schema
+      operationId: schema-add
+      description: Adding a schema
+      tags:
+        - Publishing
+      parameters:
+        - $ref: '#/components/parameters/client_id'
+        - $ref: '#/components/parameters/message_type'
+      requestBody:
+        description: |
+          OpenAPI3 format for payload validation:
+          ```json
+          // #schema_content/components/schemas/Event
+          {
+            "type": "object",
+            "required": [
+                "example-key1"
+            ],
+            "properties": {
+              "example-key1": {"type": "string"},
+              "example-key2": {"type": "number"},
+              "example-obj": {
+                "type": "object",
+                "properties": {
+                  "obj-key":  {"type": "string"}
+                }
+              }
+            }
+          }
+          ```
+          See full specs: https://swagger.io/specification
+        content:
+          application/json:
+            schema:
+              type: object
+            example:
+              schema_type: "OpenApi3"
+              schema_content:
+                openapi: "3.0.0"
+                info:
+                  version: "1.0.0"
+                  title: "Event"
+                paths: { }
+                components:
+                  schemas:
+                    Event:
+                      type: object
+                      properties:
+                        example-key1:
+                          type: string
+                        example-key2:
+                          type: number
+                        example-obj:
+                          type: object
+                          properties:
+                            obj-key:
+                              type: string
+                      required:
+                        - example-key1
+      responses:
+        '200':
+          $ref: '#/components/responses/ChattySuccess'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  '/schema/list/{client_id}':
+    get:
+      summary: List Schemas
+      operationId: schema-list
+      description: List of available schemas for client
+      tags:
+        - Publishing
+      parameters:
+        - $ref: '#/components/parameters/client_id'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: array
+                items:
+                  type: object
+                  properties:
+                    LastModified:
+                      type: string
+                      example: "2021-06-01T09:35:25+00:00"
+                    SchemaName:
+                      type: string
+                      description: auto-generated, `client_id`@`message_type`
+                      example: "demo-client-id@demo-type-id"
+                    VersionCount:
+                      type: number
+                      description: version number
+                      example: 1
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  '/schema/get/{client_id}/{type_id}':
+    get:
+      summary: Get a Schema
+      operationId: schema-get
+      description: Get client's schema by client_id and type_id
+      tags:
+        - Publishing
+      parameters:
+        - $ref: '#/components/parameters/client_id'
+        - $ref: '#/components/parameters/message_type'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  Type:
+                    type: string
+                    description: OpenApi3
+                    example: OpenApi3
+                  SchemaName:
+                    type: string
+                    description: auto-generated, `client_id`@`message_type`
+                    example: "demo-client-id@demo-type-id"
+                  SchemaVersion:
+                    type: number
+                    example: 1
+                  Content:
+                    type: string
+                    description: Full openapi spec in JSON
+                    example: "{\"openapi\": \"3.0.0\", \"info\": {\"version\": \"1.0.0\", \"title\": \"Event\"}, \"paths\": {}, \"components\": {\"schemas\": {\"Event\": {\"type\": \"object\"}}}}"
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  '/schema/update/{client_id}/{type_id}':
+    put:
+      summary: Update a Schema
+      operationId: schema-update
+      description: Updating an existing schema
+      tags:
+        - Publishing
+      parameters:
+        - $ref: '#/components/parameters/client_id'
+        - $ref: '#/components/parameters/message_type'
+      requestBody:
+        description: |
+          See full specs: https://swagger.io/specification
+        content:
+          application/json:
+            schema:
+              type: object
+            example:
+              schema_type: "OpenApi3"
+              schema_content:
+                openapi: "3.0.0"
+                info:
+                  version: "1.0.0"
+                  title: "Event"
+                paths: { }
+                components:
+                  schemas:
+                    Event:
+                      type: "object"
+                      required:
+                        - example-key1
+                      properties:
+                        example-key1:
+                          type: string
+                        example-key2:
+                          type: number
+                        example-obj:
+                          type: object
+                          properties:
+                            obj-key:
+                              type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/GenericSuccess'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  '/schema/del/{client_id}/{type_id}':
+    delete:
+      summary: Delete a Schema
+      operationId: schema-del
+      description: 'Delete a schema'
+      tags:
+        - Publishing
+      parameters:
+        - $ref: '#/components/parameters/client_id'
+        - $ref: '#/components/parameters/message_type'
+      responses:
+        '200':
+          $ref: '#/components/responses/GenericSuccess'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    parameters:
+      - $ref: '#/components/parameters/client_id'
+      - $ref: '#/components/parameters/subscription_id'
+
+  '/endpoint/latency':
+    post:
+      summary: Latency Test
+      operationId: testendpoint-latency
+      description: Test endpoind to measure message delivery latency
+      tags:
+        - Miscelaneous
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              properties:
+                detail:
+                  type: object
+                  properties:
+                    test_id:
+                      type: string
+                      example: demo-test-id
+                    message_id:
+                      type: string
+                      example: demo-message-id
+                    message_timestamp:
+                      type: number
+
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  Status:
+                    type: string
+                    minLength: 1
+                    example: "Success"
+                  Detail:
+                    type: object
+                    properties:
+                      Latency_musec:
+                        type: number
+                required:
+                  - Status
+                  - Detail
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+
+components:
+  securitySchemes:
+    APIKEY:
+      type: http
+      scheme: bearer
+      description: |
+        Event Bus Bearer Token auth. Every request to the API contains `client_id`, a unique ID/name of service on the bus, and a client token. Both `client_id` and `BearerToken` are required to work with the event bus. Example usage:
+        ```http
+        POST /v1/message/publish/DEMO-CLOUD-SERVICE/...
+        Content-Type: application/json
+        Authorization: Bearer SECRETVALUESECRETVALUE
+        ...
+
+        ```
+        In case of invalid credentials, the system will return an `HTTP-403` error:
+        ```http
+        HTTP/1.1  403 Forbidden
+
+        {"Message": "User is not authorized to access this resource with an explicit deny"}
+        ```
+  schemas:
+    client:
+      type: object
+      properties:
+        client_id:
+          type: string
+          description: Id of a client `client_id`
+          example: demo-client-id
+
+    destination:
+      type: object
+      properties:
+        authentication:
+          type: object
+          description: 'Destination endpoint configuration (https://docs.aws.amazon.com/eventbridge/latest/APIReference/API_CreateConnection.html)'
+          properties:
+            auth_type:
+              type: string
+              example: BSC_SIGV4
+            auth_parameters:
+              type: object
+              properties:
+                token_endpoint:
+                  type: string
+                  example: 'https://businessolver.com/rest/token'
+                access_key:
+                  type: string
+                  example: X-APIKEY-NAME
+                secret_key:
+                  type: string
+                  example: <SECRET-VALUE>
+                region:
+                  type: string
+                  example: us-east-1
+        webhook_uri:
+          type: string
+          description: Destination Webhook URL
+          example: 'https://webhook.site/93be5bbd-950a-4ff1-90b3-46e2febe7a60'
+    subscription:
+      type: object
+      properties:
+        destination_id:
+          type: string
+          description: destination to send events to
+          example: demo-destination-id
+        message_pattern:
+          type: object
+          description: message pattern. See pattern object info above.
+          properties:
+            source:
+              type: array
+              description: filter by `client_id`
+              minItems: 1
+              items:
+                type: string
+                example: demo-client-id
+            detail-type:
+              type: array
+              description: filter by `message_type`
+              minItems: 1
+              items:
+                type: string
+                example: demo-type-id
+        max_retry_attempts:
+          type: number
+          description: maximum retries before put to DLQ
+          default: 5
+
+  responses:
+    GenericSuccess:
+      description: Generic Success
+      content:
+        application/json:
+          schema:
+            properties:
+              Status:
+                type: string
+                minLength: 1
+              Details:
+                type: string
+            required:
+              - Status
+          examples:
+            example:
+              value:
+                Status: SUCCESS
+                Details: <message>
+
+    ChattySuccess:
+      description: Success
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              Status:
+                type: string
+                minLength: 1
+              Details:
+                type: object
+                description: object with too much details
+            required:
+              - Status
+          examples:
+            example:
+              value:
+                Status: Success
+                Details: { }
+
+    BadRequestError:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            description: ''
+            type: object
+            properties:
+              Status:
+                type: string
+                minLength: 1
+              Error:
+                type: string
+                minLength: 1
+            required:
+              - Status
+              - Error
+          examples:
+            example:
+              value:
+                Status: FAILED
+                Error: <error message>
+    ForbiddenError:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            description: ''
+            type: object
+            properties:
+              Status:
+                type: string
+                minLength: 1
+              Error:
+                type: string
+                minLength: 1
+            required:
+              - Status
+              - Error
+          examples:
+            example:
+              value:
+                Status: FAILED
+                Error: <error message>
+
+    InternalError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            description: ''
+            type: object
+            properties:
+              Status:
+                type: string
+                minLength: 1
+              Error:
+                type: string
+                minLength: 1
+            required:
+              - Status
+              - Error
+          examples:
+            example:
+              value:
+                Status: FAILED
+                Error: <error message>
+
+
+  parameters:
+    client_id:
+      name: client_id
+      in: path
+      schema:
+        type: string
+        default: demo-client-id
+      description: client_id, client's unique ID on the bus
+      required: true
+    destination_id:
+      name: destination_id
+      in: path
+      required: true
+      schema:
+        type: string
+        default: demo-destination-id
+        pattern: '[\d\w\-\_\.]+'
+      description: alphanumeric destination id.
+    message_type:
+      name: type_id
+      in: path
+      required: true
+      schema:
+        type: string
+        default: demo-type-id
+      description: arbitrary alphanumeric message type
+    subscription_id:
+      name: subscription_id
+      in: path
+      required: true
+      schema:
+        type: string
+        default: demo-subscription-id
+        pattern: '[\d\w\-\_\.]+'
+      description: alphanumeric subscription id.
+    replay_name:
+      name: replay_name
+      in: path
+      required: true
+      schema:
+        type: string
+        default: demo-replay
+      description: arbitrary replay name. EventBus will apply timestmap (2021-07-13-23-49-42) to every replay
+
+security:
+  - APIKEY: [ ]
+servers:
+  - url: 'https://bscebdev01.benefitsolver.io/v1'
+    description: bscteam13dev
+tags:
+  - name: Clients API
+    description: |
+      Generate secret pey for client and save this infromation to the Dynamo DBPI
+  - name: Destination API
+    description: |
+      In EventBus, `Destination` is a JSON RPC endpoint (webhook) implemented by the client to receive messages from the bus.
+      Destination API registers these webhook endpoints for the client.
+
+      ### Configuration
+      | configuration      | Description                                                                          |
+      |--------------------|--------------------------------------------------------------------------------------|
+      | webhook_uri        | Full URL to destination endpoint API. Must be public API. Must support API KEY auth  |
+      | auth_type          | Currently, only BSC_SIGV4 is supported                                               |
+      | access_key         | access_key id name in headers                                                        |
+      | secret_key         | secret                                                                               |
+      | region             | aws region                                                                           |
+      | token_endpoint     | endpoint for requesting access token                                                 |
+
+  - name: Subscriptions
+    description: |
+      Set a subscription for messages from a particular client_id, or of a particular message type
+
+      ### Configuration
+      | configuration            | Description                              |
+      |--------------------------|------------------------------------------|
+      | message_pattern          | see below                                |
+      | max_retry_attemps        | maximum retries before put to DLQ        |
+
+      ### Message Pattern
+      The client can subscribe to messages on the bus using a **message pattern** object.
+      1. Exact match:
+      ```json
+      {"source": ["source-client-id"], "detail-type": ["pdf.complete"]}
+      ```
+      1. Partial match:
+      ```json
+      {"detail-type": ["pdf.*"]}
+      ```
+      1. Multiple values & partial match
+      ```json
+      {
+          "source":      ["source-client-id"],
+          "detail-type": ["pdf.*", "rtf.error"]
+      }
+      ```
+
+
+  - name: Publishing
+    description: |
+      ### Schema is required
+      Message detail (payload) validation. Described with [swagger-compatible](https://swagger.io/specification) JSON.
+      Only messages that satisfy schema validation requirements will be allowed on the bus.
+
+      **Minimal** configuration in order to run the event:
+      ```json
+      {
+          "schema_type": "OpenApi3",
+          "schema_content": {
+              "openapi": "3.0.0",
+              "info": {
+                  "version": "1.0.0",
+                  "title": "Event"
+              },
+              "paths": {},
+              "components": {
+                  "schemas": {
+                      "Event": {
+                          "type": "object"
+                      }
+                   }
+              }
+          }
+      }
+      ```
+      Schema is attached to `client_id` and `type_id`. If the client sending multiple message types, all should have individual schema definitions.
+
+      ℹ️️ Before sending a message, the schema must exist for client and message type
+
+  - name: Maintenance
+    description: |
+      1. DLQ tooling. Re-send & cleanup
+      1. Archive. Create an archive of events and replay
+  - name: Miscelaneous
